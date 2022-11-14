@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maggiore della somma dei precedenti Dusini</title>
+</head>
+<body>
+    <button id="calcola" onclick="calcola()">Calcola</button>
+    <table border="1px" id="tabella">
+        <thead>
+            <tr>
+                <td>CONT</td>
+                <td>NUM</td>
+                <td>SOMMA PREC.</td>
+                <td>MAX SOMMA PREC.</td>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+<div id="risultato"></div>
+    <script>
+        function calcola(){
+            let t=document.getElementById("tabella");
+            let tbody=t.children[1];
+            let stringa=tbody.innerHTML;
+            let cont=1;
+            let num;
+            let somma=0;
+            let sommaPrec="";
+            let txtPrec;
+            do{
+                num=parseInt(prompt("Inserisci il numero"));
+                if (num>somma){
+                    sommaPrec="SI";
+                    txtPrec+="-"+num;
+                }else{
+                    sommaPrec="NO";
+                }
+                stringa+=`<tr><td>${cont++}</td>`;
+                stringa+=`<td>${num}</td>`;
+                stringa+=`<td>${somma}</td>`;
+                stringa+=`<td>${sommaPrec}</td></tr>`;
+                somma+=num;
+                tbody.innerHTML=stringa;
+
+
+            }while(num!=0);
+            document.getElementById("risultato").innerText="I numeri che risultano maggiori della somma dei precedenti sono: "+txtPrec;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gatti in fila V2 Dusini</title>
+    <style>
+        img {
+          max-width: 200px;
+        }
+        table {
+          font-size:2em;
+          text-align: center;
+        }
+      </style>
+</head>
+<body>
+    <input type="number" id="nGatto"> Inserisci Il numero di gatti<br>
+    <input type="number" id="file"> Inserisci in numero di gatti per fila <br>
+    <button onclick="calcola()">Calcola</button>
+    <table>
+        <tbody id="tbody">
+
+        </tbody>
+    </table>
+    <script>
+        function calcola(){
+            let tbody=document.getElementById("tbody");
+            let tr=document.createElement("tr");
+            let td=document.createElement("td");
+            var nGatto=document.getElementById("nGatto").value;
+            var file=document.getElementById("file").value;
+            var nFile;
+            var gattiMancanti;
+            let nTot=0;
+            let cont=1;
+            nFile=nGatto/file;
+            nFile=Math.ceil(nFile);
+            gattiMancanti=nGatto%nFile;
+
+            for (let i=0;i<=nFile;i++){
+                tr=document.createElement("tr");
+                for(let j=0;j<file;j++){
+                    if(nTot<=nGatto){
+                        td=document.createElement("td");
+                        td.innerText=`<img src="verifica 14-11\gattiIMG.jpg">`;
+                        tr.appendChild(td);
+                        nTot++;
+                    }else{
+                        d=document.createElement("td");
+                        td.innerText=`<a>${cont++}</a>`;
+                        tr.appendChild(td);
+                    }
+                }
+                tbody.appendChild(tr);
+            }
+
+        }
+    </script>
+</body>
+</html>

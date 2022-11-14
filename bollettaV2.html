@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolletta V2 Verifica</title>
+</head>
+<body>
+    <input type="number" name="" id="idCliente">Codice cliente<br>
+    <input type="number" name="" id="consumo">Consumo in Kw<br>
+    <input type="text" name="" id="costo"  value="0.03">Costo KW<br>
+    <input type="text" name="" id="iva"  value="22">IVA<br>
+    <input type="text" name="" id="canone"  value="20">Canone<br>
+    <button id="add" onclick="aggiungi()">Aggiungi utente</button>
+    <button id="add" onclick="calcola()">Calcola</button>
+
+
+
+    <table border="1px" id="tabella">
+        <thead>
+        
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <script>
+        let riga=new Array();
+        let i=0;
+        let t=document.getElementById("tabella");
+        let thead=t.children[0];
+        let tbody=t.children[1];
+        function aggiungi(){
+            let corpo;
+            let codice=document.getElementById("idCliente").value;
+            let consumo=document.getElementById("consumo").value;
+            let iva=parseFloat(document.getElementById("iva").value);
+            let costo=parseFloat(document.getElementById("costo").value);
+            let canone=parseFloat(document.getElementById("canone").value);
+            if (isNaN(codice)&&isNaN(consumo)||codice<0 && consumo<0){
+                alert("Devi inserire un numero positivo");
+            }else{
+                let totCons=consumo*costo;
+                let totIva=totCons*iva;
+                let totale=totCons+canone+totIva;
+                corpo+=`<tr><td>${codice}</td>`;
+                corpo+=`<td>${consumo}*${costo}=${totCons.toFixed(2)}</td>`;
+                corpo+=`<td>${canone}</td>`;
+                corpo+=`<td>${totCons}*${iva}%=${totIva.toFixed(2)}</td>`;
+                corpo+=`<td>${totale.toFixed(2)}€</td></tr>`;
+                riga[i]=corpo;
+                i+=1;
+                document.getElementById("idCliente").value="";
+                document.getElementById("consumo").value="";
+            }
+            
+
+        }
+        function calcola(){
+            
+            let stringa=tbody.innerHTML;
+            stringa+=`<tr><td>Codice</td>`;
+            stringa+=`<td>Consumo*Costo KWH</td>`;
+            stringa+=`<td>Canone</td>`;
+            stringa+=`<td>Iva</td>`;
+            stringa+=`<td>Totale</td></tr>`;
+            thead.innerHTML=stringa;
+            for(let i=0;i<riga.length;i++){
+                tbody.innerTXT=riga[i];
+            }
+        }
+    </script>
+</body>
+</html>

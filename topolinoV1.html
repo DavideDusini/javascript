@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Topolino</title>
+  </head>
+  <body id="body" >
+    <div id="risultato">
+        <p>SOGGETTO vuoi raggiungere OBBIETTIVO? NO!</p>
+        <p>Mancando MOTIVAZIONE per raggiungere OBBIETTIVO, SOGGETTO nel contesto CONTESTO non raggiungerai l'obbiettivo</p>
+        <p>SOGGETTO vuoi raggiungere OBBIETTIVO? SI!</p>
+        <p>SOGGETTO quale COMPORTAMENTO scegli?</p>
+        <p>ATTENZIONE SOGGETTO la scelta COMPORTAMENTO INADEGUATO ti allontana da OBBIETTIVO</p>
+        <p>:-) SOGGETTO ti sei allontanato troppo hai scelto la strada chiusa COMPORTAMENTO INADEGUATO e ti sei scontrato con CONSEGUENZE NEGATIVE</p>
+        <p>SOGGETTO quale COMPORTAMENTO scegli?</p>
+        <p>SOGGETTO la scelta COMPORTAMENTO ADEGUATO ti avvicina a OBBIETTIVO continua così!</p>
+        <p>Coraggio ci sei quasi fai l'ultimo passo!</p>
+        <p>COMPLIMENTI SOGGETTO hai raggiunto OBBIETTIVO !!!</p>
+    </div>
+
+    <form>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Topolino</label>
+            <input type="text" class="form-control" id="soggetto" placeholder="SOGGETTO protagonista" oninput="narrazione()">
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Formaggio</label>
+            <input type="text" class="form-control" id="obbiettivo" placeholder="OBBIETTIVO da raggiungere" oninput="narrazione()">
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Fame</label>
+            <input type="text" class="form-control" id="motivazione" placeholder="MOTIVAZIONE che spinge verso l'obbiettivo" oninput="narrazione()">
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Labirinto</label>
+            <input type="text" class="form-control" id="contesto" placeholder="CONTESTO in cui si svolge l'azione" oninput="narrazione()">
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Strada</label>
+            <input type="text" class="form-control" id="comportamento" placeholder="COMPORTAMENTO" oninput="narrazione()">
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Strada OK</label>
+            <input type="text" class="form-control" id="adeguato" placeholder="COMPORTAMENTO adeguato" oninput="narrazione()">
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Strada KO</label>
+            <input type="text" class="form-control" id="inadeguato" placeholder="COMPORTAMENTO inadeguato" oninput="narrazione()">
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Testata</label>
+            <input type="text" class="form-control" id="consNegative" placeholder="CONSEGUENZE NEGATIVE del comportamento inadeguato" oninput="narrazione()">
+        </div>
+    </form>
+    <script>
+        
+        function narrazione(){
+            var sog=document.getElementById("soggetto").value;
+            var obbi=document.getElementById("obbiettivo").value;
+            var moti=document.getElementById("motivazione").value;
+            var cont=document.getElementById("contesto").value;
+            var comp=document.getElementById("comportamento").value;
+            var ade=document.getElementById("adeguato").value;
+            var inad=document.getElementById("inadeguato").value;
+            var nega=document.getElementById("consNegative").value;
+
+            sog=sog.toUpperCase();
+            obbi=obbi.toUpperCase();
+            moti=moti.toUpperCase();
+            cont=cont.toUpperCase();
+            comp=comp.toUpperCase();
+            ade=ade.toUpperCase();
+            inad=inad.toUpperCase();
+            nega=nega.toUpperCase();
+
+            if(sog==""){
+                sog="SOGGETTO";
+            }
+            if(obbi==""){
+                obbi="OBBIETTIVO";
+            }
+            if(moti==""){
+                moti="MOTIVAZIONE";
+            }
+            if(cont==""){
+                cont="CONTESTO";
+            }
+            if(comp==""){
+                comp="COMPORTAMENTO";
+            }
+            if(ade==""){
+                ade="COMPORTAMENTO ADEGUATO";
+            }
+            if(inad==""){
+                inad="COMPORTAMENTO INADEGUATO";
+            }
+            if(nega==""){
+                nega="CONSEGUENZE NEGATIVE";
+            }
+            
+            let stringa="";
+            stringa+=`<p>${sog} vuoi raggiungere ${obbi}? NO!</p>`;
+            stringa+=`<p>Mancando ${moti} per raggiungere ${obbi}, ${sog} nel contesto ${cont} non raggiungerai l'obbiettivo</p>`;
+            stringa+=`<p>${sog} vuoi raggiungere ${obbi}? SI!</p>`;
+            stringa+=`<p>${sog} quale ${comp} scegli?</p>`;
+            stringa+=`<p>ATTENZIONE ${sog} la scelta ${inad} ti allontana da ${obbi}</p>`;
+            stringa+=`<p>:-) ${sog} ti sei allontanato troppo hai scelto la strada chiusa ${inad} e ti sei scontrato con ${nega}</p>`;
+            stringa+=`<p>${sog} quale ${comp} scegli?</p>`;
+            stringa+=`<p>${sog} la scelta ${ade} ti avvicina a ${obbi} continua così!</p>`;
+            stringa+=`<p>Coraggio ci sei quasi fai l'ultimo passo!</p>`;
+            stringa+=`<p>COMPLIMENTI ${sog} hai raggiunto ${obbi} !!!</p>`;
+
+            document.getElementById("risultato").innerHTML=stringa;
+        }
+
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Palestra</title>
+    </head>
+    <body>
+        
+        <script>
+            class Persona{
+            constructor(nome,cognome,codFiscale){
+                this.nome=nome;
+                this.cognome=cognome;
+                this.codFiscale=codFiscale;
+            }
+        }
+        class Socio extends Persona{
+            constructor(nome,cognome,codFiscale,durataIscrizione){
+                super(nome,cognome,codFiscale);
+                this.durataIscrizione=durataIscrizione;
+            }
+        }
+        class CorsoGruppo{
+            constructor(nome,costo,maxPart){
+                this.nome=nome;
+                this.costo=costo;
+                this.maxPart=maxPart;
+                this.elenPartecipanti=[];
+            }
+            aggiungiPartecipante(socio){
+                if(this.elenPartecipanti.length<this.maxPart){
+                    this.elenPartecipanti.push(socio)
+                }
+            }
+            numPart(){
+                return this.elenPartecipanti.length;
+            }
+            incassoPrev(){
+                return this.costo*this.numPart();
+            }
+        }
+        class Sede{
+            constructor(nome,indirizzo,maxSoci,maxCorsi){
+                this.nome=nome;
+                this.indirizzo=indirizzo;
+                this.maxSoci=maxSoci;
+                this.maxCorsi=maxCorsi;
+                this.elenSoci=[];
+                this.elenCorsi=[];
+            }
+            aggiungiCorso(corso){
+                if(this.elenCorsi.length<this.maxCorsi){
+                    this.elenCorsi.push(corso);
+                }else{
+                    console.log("Max numero corsi raggiunto");
+                }
+            }
+            aggiungiSocio(socio) {
+                if(this.elenSoci.length<this.maxSoci){
+                    this.elenSoci.push(socio);
+                }else{
+                    console.log("max numero soci raggiunto");
+                }
+            }
+            numeroSoci(){
+                return this.elenSoci.length;
+            }
+            incassoPrevisto(quotaMensile){
+                var totIncasso=0;
+                for(var i=0; i<this.elenSoci.length;i++){
+                    totIncasso+=this.elenSoci[i].durataIscrizione*quotaMensile;
+                }
+                return totIncasso;
+            }
+        }
+        class Palestra{
+            constructor(){
+                this.elenSedi=[];
+            }
+            aggiungiCorso(sede,corso){
+                for(var i=0; i<this.elenSedi.length;i++){
+                    if(this.elenSedi[i]==sede){
+                        this.elenSedi[i].aggiungiCorso(corso);      
+                    }
+                }
+            }
+            aggiungiSede(sede){
+                this.elenSedi.push(sede);
+            }
+            numTotSoci(){
+                var totSoci=0;
+                for(var i=0; i<this.elenSedi.length;i++){
+                    totSoci+=this.elenSedi[i].numeroSoci();
+                }
+                return totSoci;
+            }
+            incassoTot(quotaMensile){
+                var totIncasso=0;
+                for (var i = 0; i < this.elenSedi.length; i++) {
+                    totIncasso += this.elenSedi[i].incassoPrevisto(quotaMensile);
+                }
+                return totIncasso;
+            }
+        }
+        const palestra=new Palestra();
+        const sede1=new Sede("Palestra City", "Via Roma 1", 500, 10);
+        palestra.aggiungiSede(sede1);
+        const p1=new Persona("Mario", "Rossi", "RSSMRA01A01F205X");
+        const s1=new Socio("Luca", "Bianchi", "BNCLCU02B01F205X", 12);
+        const p2=new Persona("Anna", "Verdi", "VRDANA03C01F205X");
+        const s2=new Socio("Paola", "Neri", "NRIMPA04D01F205X", 6);
+
+        const corso1 = new CorsoGruppo("Zumba", 20, 30);
+
+        sede1.aggiungiCorso(s1);
+        corso1.aggiungiPartecipante(s1);
+        
+        console.log("Num partecipanti: "+corso1.numPart());
+        console.log("Incasso Previsto: "+corso1.incassoPrev());
+        console.log("Totale soci: "+palestra.numTotSoci());
+        console.log("Incasso totale: "+palestra.incassoTot(30));
+        </script>
+    </body>
+</html>

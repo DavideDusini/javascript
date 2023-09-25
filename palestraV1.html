@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Palestra</title>
+    </head>
+    <body>
+        
+        <script>
+            class Persona{
+            constructor(nome,cognome,codFiscale){
+                this.nome=nome;
+                this.cognome=cognome;
+                this.codFiscale=codFiscale;
+            }
+        }
+        class Socio extends Persona{
+            constructor(nome,cognome,codFiscale,durataIscrizione){
+                super(nome,cognome,codFiscale);
+                this.durataIscrizione=durataIscrizione;
+            }
+        }
+        class Sede{
+            constructor(nome,indirizzo,maxSoci){
+                this.nome=nome;
+                this.indirizzo=indirizzo;
+                this.maxSoci=maxSoci;
+                this.elenSoci=[];
+            }
+            aggiungiSocio(socio) {
+                if(this.elenSoci.length<this.maxSoci){
+                    this.elenSoci.push(socio);
+                }
+            }
+            numeroSoci(){
+                return this.elenSoci.length;
+            }
+            incassoPrevisto(quotaMensile){
+                var totIncasso=0;
+                for(var i=0; i<this.elenSoci.length;i++){
+                    totIncasso+=this.elenSoci[i].durataIscrizione*quotaMensile;
+                }
+                return totIncasso;
+            }
+        }
+        class Palestra{
+            constructor(){
+                this.elenSedi=[];
+            }
+            aggiungiSede(sede){
+                this.elenSedi.push(sede);
+            }
+            numTotSoci(){
+                var totSoci=0;
+                for(var i=0; i<this.elenSedi.length;i++){
+                    totSoci+=this.elenSedi[i].numeroSoci();
+                }
+                return totSoci;
+            }
+            incassoTot(quotaMensile){
+                var totIncasso=0;
+                for (var i = 0; i < this.elenSedi.length; i++) {
+                    totIncasso += this.elenSedi[i].incassoPrevisto(quotaMensile);
+                }
+                return totIncasso;
+            }
+        }
+        const s1=new Socio("Mario", "Rossi", "RSSMRA01A01F205X", 6);
+        const s2=new Socio("Luca", "Bianchi", "BNCLCU02B01F205X", 12);
+        const s3=new Socio("Anna", "Verdi", "VRDANA03C01F205X", 3);
+        const s4=new Socio("Paola", "Neri", "NRIMPA04D01F205X", 6);
+
+        const sede1=new Sede("Sede A", "Via Roma 1, Milano", 50);
+        const sede2=new Sede("Sede B", "Via Dante 10, Firenze", 30);
+
+        sede1.aggiungiSocio(s1);
+        sede1.aggiungiSocio(s2);
+        sede2.aggiungiSocio(s3);
+        sede2.aggiungiSocio(s4);
+        console.log(sede1)
+
+        const palestra=new Palestra();
+        palestra.aggiungiSede(sede1);
+        palestra.aggiungiSede(sede2);
+
+        console.log("Numero tot Soci="+palestra.numTotSoci());
+        console.log("Incasso totale: "+palestra.incassoTot(50));
+        </script>
+    </body>
+</html>

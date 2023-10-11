@@ -67,12 +67,22 @@
             numeroSoci(){
                 return this.elenSoci.length;
             }
+            numCorsi(){
+                return this.elenCorsi.length;
+            }
             incassoPrevisto(quotaMensile){
                 var totIncasso=0;
                 for(var i=0; i<this.elenSoci.length;i++){
                     totIncasso+=this.elenSoci[i].durataIscrizione*quotaMensile;
                 }
                 return totIncasso;
+            }
+            incassoCorsi(){
+                var totIncassoCors=0;
+                for(var i=0; i<this.elenCorsi.length; i++){
+                    totIncassoCors+=this.elenCorsi[i].incassoPrev();
+                }
+                return totIncassoCors;
             }
         }
         class Palestra{
@@ -85,6 +95,7 @@
                         this.elenSedi[i].aggiungiCorso(corso);      
                     }
                 }
+                
             }
             aggiungiSede(sede){
                 this.elenSedi.push(sede);
@@ -114,13 +125,17 @@
 
         const corso1 = new CorsoGruppo("Zumba", 20, 30);
 
-        sede1.aggiungiCorso(s1);
+        sede1.aggiungiCorso(corso1);
+        sede1.aggiungiSocio(s1);
+        sede1.aggiungiSocio(s2);
         corso1.aggiungiPartecipante(s1);
         
         console.log("Num partecipanti: "+corso1.numPart());
         console.log("Incasso Previsto: "+corso1.incassoPrev());
         console.log("Totale soci: "+palestra.numTotSoci());
         console.log("Incasso totale: "+palestra.incassoTot(30));
+        console.log("Incasso corsi: "+sede1.incassoCorsi());
+        console.log("Numero dei corsi della sede 1: "+sede1.numCorsi());
         </script>
     </body>
 </html>

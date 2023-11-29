@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <title>Verifica Fila A Dusini</title>
+  </head>
+  <body>
+    <h1>Gestione di una biblioteca</h1>
+    <h3>Verifica Fila A Dusini</h3>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" >
+        Restituisci libro
+      </button>
+    
+    
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalInventario" >
+        Aggiungi libro
+      </button>
+
+      <div class="modal" tabindex="-1" role="dialog" id="modalInventario">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Aggiungi un Libro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                    <label for="exampleFormControlInput1">Titolo</label>
+                    <input type="text" class="form-control" placeholder="" id="titolo">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Autore</label>
+                        <input type="text" class="form-control" placeholder="" id="autore">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Genere</label>
+                        <input type="text" class="form-control" placeholder="" id="genere">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Anno di Pubblicazione</label>
+                        <input type="number" class="form-control" placeholder="" id="anno">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="aggiungiLibroInventario()">Aggiungi</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" id="exampleModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Restituzione Libro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                   
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Libro da restituire</label>
+                        <select class="form-control" id="libriprestati">
+                    
+
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="restituzioneLibro()">Restituisci</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+      <button type="button" class="btn btn-primary" onclick="elenco()">Elenco libri in prestito</button>
+      <table id="tabella" class="table table-striped" >
+        <thead>
+            <tr>
+                <th scope="col">Titolo</th>
+                <th scope="col">Autore</th>
+                <th scope="col">Genere</th>
+                <th scope="col">Anno di Pubblicazione</th>
+                <th scope="col">Disponibilità</th>
+              </tr>
+        </thead>
+        <tbody id = "tabCorpo">
+
+        </tbody>
+    <script>
+        let t=document.getElementById("tabella");
+        let tbody=t.children[1];
+        class Libro{
+            constructor(titolo,autore,genere,annoPubblicazione,disponibile){
+                this.titolo=titolo;
+                this.autore=autore;
+                this.genere=genere;
+                this.annoPubblicazione=annoPubblicazione;
+                this.disponibile=disponibile;
+            }
+            setDisponibilita(dispo){
+                this.disponibile=dispo;
+            }
+            disponibile(){
+                return this.disponibile;
+            }
+        }
+        class Lettore{
+            constructor(nome,cognome,numeroTessera,prestiti){
+                this.nome=nome;
+                this.cognome=cognome;
+                this.numeroTessera=numeroTessera;
+                this.prestiti=prestiti;
+                this.vetPrestiti=[];
+            }
+            aggiungiPrestito(libro){
+                for(let libri in this.vetPrestiti){
+                    if(this.vetPrestiti[libri]===libro.titolo){
+                        console.log("il libro non può essere prestato");
+                        return false;
+                    }
+                
+                }
+                console.log("Libro prestato");
+                this.vetPrestiti.push(libro);
+                libro.setDisponibilita(false);
+                return true;
+            }
+            restituisciLibro(libro){
+                for(let libri in this.vetPrestiti){
+                    if(this.vetPrestiti[libri].titolo===libro.titolo){
+                        this.vetPrestiti.splice(libri,1);
+                        console.log("Libro restituito");
+                        libro.setDisponibilita(true);
+                        return true;
+                    }
+                }
+               console.log("Libro non trovato");
+               return false;
+            }
+        }
+        class Biblioteca{
+            constructor(){
+                this.inventario=[];
+                this.lettori=[];
+                this.prestiti=[];
+            }
+            aggiungiLibro(libro){
+                this.inventario.push(libro);
+            }
+            registraLettore(lettore){
+                this.lettori.push(lettore);
+            }
+            effettuaPrestito(lettore,libro){
+                for(let lett in this.lettori){
+                    for(let lib in this.inventario){
+                        if (this.lettori[lett].numeroTessera===lettore.numeroTessera && this.inventario[lib].titolo===libro.titolo && libro.disponibile){
+                            this.prestiti.push(libro);
+                            this.lettori[lett].aggiungiPrestito(libro);
+                            libro.setDisponibilita(false);
+                            console.log("prestito effettuato");
+                            return true;
+                        }
+                    }
+                }
+                console.log("Impossibile effettuare il prestito");
+                return false;
+            }
+            restituisciLibro(lettore,libro){
+                for(let lett in this.lettori){
+                    for(let lib in this.prestiti){
+                        if(this.prestiti[lib].titolo===libro.titolo){
+                            libro.setDisponibilita(true);
+                            this.prestiti.splice(lib,1);
+                            this.lettori[lett].restituisciLibro(libro);
+                            console.log("Libro restituito");
+                            return true;
+                        }
+                }
+                }
+                console.log("Libro non restituito");
+                return false;
+            }
+            listaLibriInPrestito(){
+                let lista="";
+                for(let i=0; i<this.prestiti.length;i++){
+                    lista+= this.prestiti[i].titolo + ", ";
+                }
+                return lista; 
+            }
+            listaLibriInPrestitoOggetti(){
+                return this.prestiti;
+            }
+
+        }
+        let libro1 = new Libro("Lo sguardo dei potenti","Sconosciuto","Romanzo",2023,true);
+        let libro2 = new Libro("Il paese che non c'è","Verga","fantasy",1984,true);
+        let libro3 = new Libro("Milano Ovest","shiva","articolo",2018,true);
+        let libro4 = new Libro("Il ritorno del re","Sfera","Romanzo",2023,true);
+
+        let lettore1 = new Lettore("Davide","Dusini", 1,0);
+        let lettore2 = new Lettore("Alex","Koca", 2,0);
+
+        let biblioteca = new Biblioteca();
+
+        biblioteca.aggiungiLibro(libro1);
+        biblioteca.aggiungiLibro(libro2);
+        biblioteca.aggiungiLibro(libro3);
+        biblioteca.aggiungiLibro(libro4);
+
+        biblioteca.registraLettore(lettore1);
+        biblioteca.registraLettore(lettore2);
+
+        biblioteca.effettuaPrestito(lettore1,libro3);
+        biblioteca.effettuaPrestito(lettore2,libro2);
+        biblioteca.effettuaPrestito(lettore1,libro4);
+
+        console.log(biblioteca.listaLibriInPrestito());
+
+        biblioteca.restituisciLibro(lettore1,libro3);
+        biblioteca.restituisciLibro(lettore1,libro4);
+        
+        console.log(biblioteca.listaLibriInPrestito());
+        function elenco(){
+            let titolo;
+            let autore;
+            let genere;
+            let annoPubb;
+            let disponibilita;
+            let corpo;
+            tbody.innerHTML = "";
+            for(let i=0; i<biblioteca.prestiti.length;i++){
+                titolo=biblioteca.prestiti[i].titolo;
+                autore=biblioteca.prestiti[i].autore;
+                genere=biblioteca.prestiti[i].genere;
+                annoPubb=biblioteca.prestiti[i].annoPubblicazione;
+                disponibilita=biblioteca.prestiti[i].disponibile;
+                corpo=`<tr><td>${titolo}</td>`;
+                corpo+=`<td>${autore}</td>`;
+                corpo+=`<td>${genere}</td>`;
+                corpo+=`<td>${annoPubb}</td>`;
+                corpo+=`<td>${disponibilita}</td></tr>`;
+                
+                tbody.innerHTML += corpo;
+            }
+        }
+        for(let i=0; i<biblioteca.prestiti.length;i++){
+            let libro=biblioteca.prestiti[i].titolo;
+            document.getElementById("libriprestati").innerHTML+=`<option value="${libro}">${libro}</option>`;    
+            
+        }
+        function restituzioneLibro(){
+            let libroPrestato=document.getElementById("libriprestati").value;
+            for(lib in biblioteca.prestiti){
+                if(biblioteca.prestiti[lib]===libroPrestato){
+                    biblioteca.prestiti.splice(lib,1);
+                    alert("libro restituito");
+                }
+            }
+        }
+        function aggiungiLibroInventario(){
+            let titolo=document.getElementById("titolo").value;
+            let autore=document.getElementById("autore").value;
+            let genere=document.getElementById("genere").value;
+            let anno=document.getElementById("anno").value;
+            let disponibilita=true;
+            let libro=new Libro(titolo,autore,genere,anno,disponibilita);
+            biblioteca.aggiungiLibro(libro);
+            alert("Libro aggiunto con successo");
+
+            document.getElementById("titolo").value="";
+            document.getElementById("autore").value="";
+            document.getElementById("genere").value="";
+            document.getElementById("anno").value="";
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+  </body>
+</html>

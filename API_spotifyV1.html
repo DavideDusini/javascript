@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>API Spotify V1</title>
+  </head>
+  <body>
+    <h2>Davide Dusini API Spotify V1</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Autore</th>
+                <th>Titolo</th>
+                <th>Copertina</th>
+                <th>Ascolta</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+    </table>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>
+        var access_token = "BQDWBybiIwxtwTdJ8KtWa9MApJV4-6JOqrOeKljytswnWAgBfdysD_QW1lsey31TD6KKv9zeTHC3duSYZGYcTsoZiOIxzmLkFd--RPCuM_YHsi7onC4GPKbd_Eut2uv1JvR7Y6RvHvlQX2Snm2RjRX91CWDwGxE9xOuVi5HPgkoE_FWqb4SyNu11gzlde_6Jvw";
+        var album_id = "36pfG4aLiawluO8PgGZkeh";
+        async function fetchAlbumData(){
+            try{
+                const response = await fetch(`https://api.spotify.com/v1/albums/${album_id}`,{
+                    headers: {
+                        'Authorization': 'Bearer ' + access_token
+                    }
+                });
+
+                if (!response.ok){
+                    throw new Error('Errore nella richiesta: '+response.status);
+                }
+                const userData = await response.json();
+                return userData;
+            }catch (error){
+                console.error("Errore durante la richiesta:", error)
+                return null;
+            }
+        }
+
+        async function renderTable(){
+            try{
+                const jsonAlbumData = await fetchAlbumData();
+                let tbody = "<tr>";
+                tbody += `<td>${jsonAlbumData["artists"][0]["name"]}</td>`;
+                tbody += `<td>${jsonAlbumData["name"]}</td>`;
+                tbody += `<td><img src="${jsonAlbumData["images"][0]["url"]}" alt="Copertina" style="width: 100px;"></td>`;
+                tbody += `<td><a href="${jsonAlbumData["external_urls"]["spotify"]}">Ascolta</a></td>`;
+                tbody += "</tr>";
+            document.getElementById("tbody").innerHTML = tbody;
+            }catch (error){
+                console.error("Errore durante il rendering della tabella: ", error);
+            }
+        }
+        renderTable()
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>

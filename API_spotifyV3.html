@@ -30,7 +30,7 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script>
-        var access_token = "BQCC1ecoB_FYrJiUyyy94nvA-eAAdcctvFesk3pPgqDYuj2HkEtLMxlFapJ4Is-oOuw7rvnZOvT2fAX8u46qe9K2NigeqDmwi890lzs8CdK0BY7KQpiwELyPrPj3_mpx5NrdPTkUsOH3cWsF6vjQHimjyAvq55zASu2ciB4izH66qazCnHE_VfpyqOdx-_T4-g";
+        var access_token = "BQBNm0i3Puo2BxQB2Q_fECpEdzrKM3uPEH-ACg6I1jz-ROJiP0BPoQxUnktw0NTUac4qPjnKXN6_Xri-s3xv_CLv7b3h42mHPGb-AB5xq5kRzvoMOxGgp89sLZ0Dhh8sA3m4o7HaCYWXHIFOTrdtM45HyB7JtbH3xQgKDtGbEBhVGruGaE0uWI6Sspucz9BA5w";
         
         async function fetchAlbumData(){
             try{
@@ -57,9 +57,8 @@
                 let tbody = "";
                 let i = 0;
                 items = recently_played_tracks["items"]
-                for(const elem in items){
-                    const track = elem.track;
-                    tbody += `<tr><td><a href="${track.artists[0].external_urls.spotify}">${track.artists[0].name}</a></td><td>${track["name"]}</td><td><img src="${track.album.images[0].url}" alt="Copertina" style="width: 100px;"></td><td><a href="${track.external_urls.spotify}">Ascolta</a></td><td><a href="${track.album.external_urls.spotify}">${track.album.name}</a></td></tr>`;
+                for(let elem in items){
+                    tbody += `<tr><td><a href="${items[elem].track.artists[0].external_urls.spotify}">${items[elem].track.artists[0].name}</a></td><td>${items[elem].track["name"]}</td><td><img src="${items[elem].track.album.images[0].url}" alt="Copertina" style="width: 100px;"></td><td><a href="${items[elem].track.external_urls.spotify}">Ascolta</a></td><td><a href="${items[elem].track.album.external_urls.spotify}">${items[elem].track.album.name}</a></td></tr>`;
                     i += 1;
                 }
             document.getElementById("tbody").innerHTML = tbody;

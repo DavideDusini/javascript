@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <title>API Spotify V4</title>
+  </head>
+  <body>
+    <h2>Davide Dusini API Spotify V4</h2>
+      <div hidden id="dettagli_div">
+          <button class="btn btn-primary" onclick="back()">indietro</button>
+          <h3>Dettagli album:</h3>
+          <div id="dinAlbum"></div>
+      </div>
+
+      <div id="spotifyPlayer"></div>
+      <!--hidden="hidden"-->
+
+      <table class="table table-striped" hidden id="dettagli_tabella">
+        <thead class="thead-dark">
+            <td>Ascolta</td>
+            <td>Titolo</td>
+            <td>Durata</td>
+        </thead>
+          <tbody id="tdettagli"></tbody>
+      </table>
+
+      <table class="table table-striped" id="table">
+        <thead class="thead-dark">
+            <tr>
+              <td>Autore</td>
+              <td>Titolo</td>
+              <td>Copertina</td>
+              <td>Ascolta</td>
+              <td>Visualizza Album</td>
+          </tr>
+        </thead>  
+          <tbody id="tbody"></tbody>
+      </table>
+
+      <script>
+          var access_token = "BQCV4t2FCSvu1sHT71Tqeuhs-K3G0hI0HEeR6jRdiY4XMjpaEk6EZObpD8ejCBoJZ7F_aWcLCzIKebSL6h85YpBXHJrrJjWQNWdwgI76qaTRdYv1uLO723xMA9I__-Dn-zV3V50Dp_Q3yHwYUDkYAQykDqdC4jBpMdEmYPirw2JeXWKwOyaLNoBurk7cDzjppQ";
+          async function fetchData(dati) {
+              try {
+                  const response = await fetch(`https://api.spotify.com/v1/${dati}`, {
+                      headers: {
+                          "Authorization": 'Bearer ' + access_token
+                      }
+                  });
+                  if (!response.ok) {
+                      throw new Error('errore nella richiesta: ' + response.status);
+                  }
+                  const userData = await response.json();
+                  return userData;
+              } catch (error) {
+                  console.error("errore durante la richiesta:", error)
+                  return null;
+              }
+          }
+
+          async function playSong(songId, songTitle) {
+              document.getElementById("spotifyPlayer").hidden = false;
+              const playerDiv = document.getElementById('spotifyPlayer');
+              const playerHtml = `
+                        <div>
+                            <p>Stai ascoltando: ${songTitle}</p>
+                            <iframe src="https://open.spotify.com/embed/track/${songId}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media">
+                            </iframe>
+                        </div>`;
+              playerDiv.innerHTML = playerHtml;
+          }
+
+          async function renderTable() {
+              try {
+                  const jsonTrackData = await fetchData('me/player/recently-played');
+                  let tbody = "";
+                  console.log(jsonTrackData);
+                  jsonTrackData['items'].forEach(track => {
+                    
+                      tbody += `<tr><td><a href="${track.track.artists[0].external_urls.spotify}">${track.track.artists[0].name}</a></td>`;
+                      tbody += `<td>${track.track.name}</td>`;
+                      tbody += `<td><img src="${track.track.album.images[0].url}" alt="Copertina" style="width: 100px;"</td>`;
+                      tbody += `<td><button class="btn btn-secondary" onclick="playSong('${track.track.id}', '${track.track.name}')">Play</button></td>`;
+                      tbody += `<td><button class="btn btn-danger" onclick="dettagli('${track.track.album.images[1].url}', '${track.track.album.name}', '${track.track.album.id}')">Dettagli</button></td></tr>`;
+                  });
+                  //tbody += `<td><img src="${jsonAlbumData["images"][0]["url"]}" alt="Copertina" style="width: 100px;"</td>`;
+                  //tbody += `<td><a href="${jsonAlbumData["external_urls"]["spotify"]}">Ascolta</a></td>`;
+                  document.getElementById("tbody").innerHTML = tbody;
+              } catch (error) {
+                  console.error("errore durante il rendering della tabella: ", error);
+              }
+          }
+
+          async function dettagli(img, nome, albumId) {
+              document.getElementById("dettagli_div").hidden = false;
+              document.getElementById("dettagli_tabella").hidden = false;
+              document.getElementById("table").hidden = true;
+              document.getElementById("spotifyPlayer").hidden = true;
+
+              let tbody = "";
+              tbody += `<h4><strong>Nome: </strong>${nome}</h4>`;
+              tbody += `<img src="${img}" style="width: 250px;"></img><br>`;
+              document.getElementById("dinAlbum").innerHTML = tbody;
+              tbody = "";
+
+              const jsonTrackData = await fetchData(`albums/${albumId}`);
+              console.log(jsonTrackData);
+              jsonTrackData['tracks']['items'].forEach(track => {
+                  tbody += `<td><button class="btn btn-primary" onclick="playSong('${track.id}', '${track.name}')">Play</button></td>`;
+                  tbody += `<td>${track.name}</td>`;
+                  tbody += `<td>${msToTime(track['duration_ms'])}</td><tr>`;
+              });
+              document.getElementById("tdettagli").innerHTML = tbody;
+          }
+
+          function back() {
+                document.getElementById("spotifyPlayer").hidden = true;
+                document.getElementById("dettagli_div").hidden = true;
+                document.getElementById("dettagli_tabella").hidden = true;
+                document.getElementById("table").hidden = false;
+          }
+        
+        function msToTime(s) {
+            function pad(n, z) {
+                z = z || 2;
+                return ('00' + n).slice(-z);
+            }
+
+            var ms = s % 1000;
+            s = (s - ms) / 1000;
+            var secs = s % 60;
+            s = (s - secs) / 60;
+            var mins = s % 60;
+
+            return pad(mins) + ':' + pad(secs);
+        }
+          renderTable();
+      </script>
+
+      <!-- Optional JavaScript; choose one of the two! -->
+      <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+      <!-- Option 2: jQuery, Popper.js, and Bootstrap JS
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
